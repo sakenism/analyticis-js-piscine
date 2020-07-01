@@ -7,6 +7,11 @@
 import os
 from datetime import datetime
 
+import plotly.express as px
+import numpy as np
+import plotly.graph_objects as go
+
+
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from docxtpl import DocxTemplate
@@ -192,13 +197,50 @@ for child in children_of_js:
 
 # print(map_ans)
 
-for child in children_of_js:
-	print(child['id'], map_ans[child['id']])
-	for grand in children_of_child[child['id']]:
-		print('\t', grand['child']['id'], map_ans[grand['child']['id']])
-	print()
 
-# print(children_of_child)
+bin_children_id = []
+bin_children_name = []
+bin_children_success = []
+bin_children_fail = []
+
+bin_grandchildren_id = []
+bin_grandchildren_name = []
+bin_grandchildren_success = []
+bin_grandchildren_fail = []
+
+for child in children_of_js:
+	# print(child['id'], map_ans[child['id']])
+	bin_children_id.append(child['id'])
+	bin_children_name.append(map_ans[child['id']][0]['name'])
+	bin_children_success.append(map_ans[child['id']][0]['success'])
+	bin_children_fail.append(map_ans[child['id']][0]['fail'])
+
+	for grand in children_of_child[child['id']]:
+		bin_grandchildren_id.append(grand['child']['id'])
+		bin_grandchildren_name.append(map_ans[grand['child']['id']][0]['name'])
+		bin_grandchildren_success.append(map_ans[grand['child']['id']][0]['success'])
+		bin_grandchildren_fail.append(map_ans[grand['child']['id']][0]['fail'])
+		# print('\t', grand['child']['id'], map_ans[grand['child']['id']])
+	# print()
+
+# print(bin_children_id)
+# print(bin_children_name)
+# print(bin_children_success)
+# print(bin_children_fail)
+
+# print()
+
+# print(bin_grandchildren_id)
+# print(bin_grandchildren_name)
+# print(bin_grandchildren_success)
+# print(bin_grandchildren_fail)
+
+figchildren = go.Figure(data=go.Bar(x=bin_children_name, y=bin_children_success))
+figchildren.show()
+
+figgrandchildren = go.Figure(data=go.Bar(x=bin_grandchildren_name, y=bin_grandchildren_success))
+figgrandchildren.show()
+
 
 # for child in children_of_child:
 # 	print(child, children_of_child[child])
